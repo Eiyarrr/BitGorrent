@@ -39,6 +39,8 @@ func Open(reader io.Reader) (*bencodeTorrent, error) {
 func toTorrentFile(benTor bencodeTorrent) (TorrentFile, error) {
 	torrent := TorrentFile{
 		Announce:    benTor.Announce,
+		//InfoHash
+		PieceHashes: splitPieceHashes([]byte(benTor.Info.Pieces)),
 		PieceLength: benTor.Info.PieceLength,
 		Length:      benTor.Info.Length,
 		Name:        benTor.Info.Name,
