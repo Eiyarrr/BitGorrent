@@ -19,8 +19,10 @@ func (torFile *TorrentFile) buildTrackerURL(peerID [20]byte, port uint16) (strin
 		"uploaded":   []string{"0"},
 		"downloaded": []string{"0"},
 		"compact":    []string{"1"},
-		"left":       []string{strconv.Itoa(torFile.Length)}}
+		"left":       []string{strconv.Itoa(torFile.Length)},
 	}
 
-	return "", nil
+	base.RawQuery = params.Encode()
+
+	return base.String(), nil
 }
