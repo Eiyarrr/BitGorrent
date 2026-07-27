@@ -1,8 +1,10 @@
 package bittorrent
 
 import (
-	"github.com/Eiyarrr/Bencode-Parser"
+	"crypto/sha1"
 	"io"
+
+	"github.com/Eiyarrr/Bencode-Parser"
 )
 
 type bencodeInfo struct {
@@ -37,9 +39,14 @@ func Open(reader io.Reader) (*bencodeTorrent, error) {
 }
 
 func toTorrentFile(benTor bencodeTorrent) (TorrentFile, error) {
+	encoded, err := bencode.Encode(infoToMap(benTor.Info))
+	if err != nil {
+		return TorrentFile{}, err
+	}
+
 	torrent := TorrentFile{
 		Announce:    benTor.Announce,
-		//InfoHash
+		InfoHash:    sha1.Sum(encoded),
 		PieceHashes: splitPieceHashes([]byte(benTor.Info.Pieces)),
 		PieceLength: benTor.Info.PieceLength,
 		Length:      benTor.Info.Length,
@@ -61,4 +68,13 @@ func splitPieceHashes(pieces []byte) [][20]byte {
 	}
 
 	return hashes
+}
+
+func infoToMap(info bencodeInfo) map[string]any {
+	return map[string]any{
+		"pieces":       info.Pieces,
+		"piece length": int64(info.PieceLength),
+		"length":       int64(info.Length),
+		"name":         info.Name,
+	}
 }
