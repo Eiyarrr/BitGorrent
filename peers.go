@@ -54,3 +54,7 @@ func (torFile *TorrentFile) buildTrackerURL(peerID [20]byte, port uint16) (strin
 
 	return base.String(), nil
 }
+
+func (p Peer) String() string {
+    return fmt.Sprintf("%s:%d", p.IP.String(), p.Port)
+}
