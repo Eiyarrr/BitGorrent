@@ -1,0 +1,3 @@
+[submodule "bencode-parser"]
+	path = bencode-parser
+	url = https://github.com/Eiyarrr/Bencode-Parser
