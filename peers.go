@@ -1,6 +1,7 @@
 package bittorrent
 
 import (
+	"encoding/binary"
 	"fmt"
 	"net"
 	"net/url"
@@ -15,10 +16,21 @@ type Peer struct {
 // parses peer IPs & ports from a buffer
 func Unmarshal(peersBin []byte) ([]Peer, error) {
 	const peerSize = 6 // IP = 4 + Port = 2
-	if len(peersBin) % peerSize != 0{
+	if len(peersBin)%peerSize != 0 {
 		err := fmt.Errorf("recieved malformed peers")
 		return nil, err
 	}
+
+	numPeers := len(peersBin) / peerSize
+
+	peers := make([]Peer, numPeers)
+	for i := range numPeers {
+		offset := i * peerSize
+		peers[i].IP = net.IP(peersBin[offset : offset+4])
+		peers[i].Port = binary.BigEndian.Uint16(peersBin[offset+4 : offset+6])
+	}
+
+	return peers, nil
 }
 
 // belongs to torFile (e.g. torFile.buildTrackerURL(...))
