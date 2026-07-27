@@ -1,9 +1,15 @@
 package bittorrent
 
 import (
+	"net"
 	"net/url"
 	"strconv"
 )
+
+type Peer struct {
+	IP   net.IP
+	Port uint16
+}
 
 // belongs to torFile (e.g. torFile.buildTrackerURL(...))
 func (torFile *TorrentFile) buildTrackerURL(peerID [20]byte, port uint16) (string, error) {
