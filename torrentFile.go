@@ -1,10 +1,8 @@
 package bittorrent
 
 import (
-	"io"
-	"weak"
-
 	"github.com/Eiyarrr/Bencode-Parser"
+	"io"
 )
 
 type bencodeInfo struct {
@@ -47,4 +45,18 @@ func toTorrentFile(benTor bencodeTorrent) (TorrentFile, error) {
 	}
 
 	return torrent, nil
+}
+
+func splitPieceHashes(pieces []byte) [][20]byte {
+	var hashes [][20]byte
+
+	for i, _ := range pieces {
+		var hash [20]byte
+		// copy the next 20 bytes into hash
+		copy(hash[:], pieces[i:i+20])
+		// put hash onto end of hashes
+		hashes = append(hashes, hash)
+	}
+
+	return hashes
 }
