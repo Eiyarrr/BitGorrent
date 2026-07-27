@@ -1,5 +1,7 @@
 package bittorrent
 
+import "encoding/binary"
+
 type messageID uint8
 
 const (
@@ -17,4 +19,24 @@ const (
 type message struct {
 	ID      messageID
 	Payload []byte
+}
+
+// Serializes into form: <length prefix><message ID><payload>
+func (m *message) Serialize() []byte {
+	// interprets 'nil' as a keep alive message
+	if m == nil {
+		return make([]byte, 4)
+	}
+
+	length := uint32(len(m.Payload)+1) // +1 for ID
+	buf := make([]byte, 4+length)
+
+	binary.BigEndian.PutUint32(buf[0:4], length)
+	// set ID
+	buf[4] = byte(m.ID)
+
+	// set Payload
+	copy(buf[5:], m.Payload)
+
+	return buf
 }
