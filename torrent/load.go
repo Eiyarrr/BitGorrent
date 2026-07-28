@@ -41,6 +41,7 @@ func loadPath(path string) (*Torrent, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer file.Close()
 
 	return parse(file)
 }
