@@ -3,6 +3,7 @@ package torrent
 import (
 	"fmt"
 	"io"
+	"net/http"
 	"net/url"
 	"os"
 
@@ -25,7 +26,14 @@ func Load(pathOrURL string) (*Torrent, error) {
 }
 
 func loadURL(u *url.URL) (*Torrent, error) {
-	return nil, nil
+	// resp.Body is the io.Reader() for the response data,
+	// containing the contents of the .torrent file
+	resp, err := http.Get(u.String())
+	if err != nil {
+		return nil, err
+	}
+
+	return parse(resp.Body)
 }
 
 func loadPath(path string) (*Torrent, error) {
@@ -58,9 +66,9 @@ func parse(reader io.Reader) (*Torrent, error) {
 		return nil, fmt.Errorf("missing or invalid info field")
 	}
 
-	torrent := &Torrent {
+	torrent := &Torrent{
 		Announce: announce,
-		Info: info,
+		Info:     info,
 	}
 
 	return torrent, nil
