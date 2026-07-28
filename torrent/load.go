@@ -29,7 +29,12 @@ func loadURL(u *url.URL) (*Torrent, error) {
 }
 
 func loadPath(path string) (*Torrent, error) {
-	return nil, nil
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return parse(file)
 }
 
 func parse(reader io.Reader) (*Torrent, error) {
