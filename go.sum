@@ -1,2 +1,4 @@
 github.com/Eiyarrr/Bencode-Parser v0.0.0-20260728091457-687beaafb161 h1:yh5r7gct91T6AwCXPT7X/OMBOlYU8J9I3B4FQT3zo7I=
 github.com/Eiyarrr/Bencode-Parser v0.0.0-20260728091457-687beaafb161/go.mod h1:cNn0PZFM22n7bZ0ZVwDdIV4A0FvCXqzaP9lkw3ZCRa0=
+github.com/Eiyarrr/Bencode-Parser v0.0.0-20260728145311-047c33cca47c h1:QVYo6qTGgx0fLl9XfBw6uG5EQ0TkMvDHjU0EDIbiFRE=
+github.com/Eiyarrr/Bencode-Parser v0.0.0-20260728145311-047c33cca47c/go.mod h1:cNn0PZFM22n7bZ0ZVwDdIV4A0FvCXqzaP9lkw3ZCRa0=
