@@ -1,8 +1,12 @@
 package torrent
 
 import (
+	"fmt"
+	"io"
 	"net/url"
 	"os"
+
+	"github.com/Eiyarrr/Bencode-Parser"
 )
 
 func Load(pathOrURL string) (*Torrent, error) {
@@ -25,14 +29,34 @@ func loadURL(u *url.URL) (*Torrent, error) {
 }
 
 func loadPath(path string) (*Torrent, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, nil
-	}
-
-	return parse(data)
+	return nil, nil
 }
 
-func parse(data []byte) (*Torrent, error) {
-	return nil, nil
+func parse(reader io.Reader) (*Torrent, error) {
+	decoded, err := bencode.Decode(reader)
+	if err != nil {
+		return nil, err
+	}
+
+	dict, ok := decoded.(map[string]any)
+	if !ok {
+		return nil, fmt.Errorf(".torrent file must contain a dictionary")
+	}
+
+	announce, ok := dict["announce"].(string)
+	if !ok {
+		return nil, fmt.Errorf("missing or invalid announce field")
+	}
+
+	info, ok := dict["info"].(map[string]any)
+	if !ok {
+		return nil, fmt.Errorf("missing or invalid info field")
+	}
+
+	torrent := &Torrent {
+		Announce: announce,
+		Info: info,
+	}
+
+	return torrent, nil
 }
