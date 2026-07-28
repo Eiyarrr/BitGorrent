@@ -1,13 +1,31 @@
 package client
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"os"
+)
 
-type Client struct{}
+type Client struct {
+	path   string
+	reader io.Reader
+}
 
-func New() Client {
+func New(torrentPath string) (Client, error) {
 	fmt.Println("New client created!")
+	fmt.Println("Path: ", torrentPath)
 
-	return Client{}
+	reader, err := os.Open(torrentPath)
+	if err != nil {
+		return Client{}, err
+	}
+
+	c := Client{
+		path:   torrentPath,
+		reader: reader,
+	}
+
+	return c, nil
 }
 
 func (c *Client) Run() {
